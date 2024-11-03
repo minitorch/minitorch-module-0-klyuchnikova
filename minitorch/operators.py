@@ -3,37 +3,80 @@
 import math
 
 # ## Task 0.1
-from typing import Callable, Iterable
+from typing import Callable, Iterable, List, TypeVar
 
 #
 # Implementation of a prelude of elementary functions.
 
 # Mathematical functions:
-# - mul
-# - id
-# - add
-# - neg
-# - lt
-# - eq
-# - max
-# - is_close
-# - sigmoid
-# - relu
-# - log
-# - exp
-# - log_back
-# - inv
-# - inv_back
-# - relu_back
-#
-# For sigmoid calculate as:
-# $f(x) =  \frac{1.0}{(1.0 + e^{-x})}$ if x >=0 else $\frac{e^x}{(1.0 + e^{x})}$
-# For is_close:
-# $f(x) = |x - y| < 1e-2$
 
+def mul(x: float, y: float) -> float:
+    """Multiplies two numbers."""
+    return x * y
 
-# TODO: Implement for Task 0.1.
+def id(x: float) -> float:
+    """Returns the input unchanged."""
+    return x
 
+def add(x: float, y: float) -> float:
+    """Adds two numbers."""
+    return x + y
+
+def neg(x: float) -> float:
+    """Negates a number."""
+    return -x
+
+def lt(x: float, y: float) -> bool:
+    """Checks if one number is less than another."""
+    return x < y
+
+def eq(x: float, y: float) -> bool:
+    """Checks if two numbers are equal."""
+    return x == y
+
+def max(x: float, y: float) -> float:
+    """Returns the larger of two numbers."""
+    return x if x > y else y
+
+def is_close(x: float, y: float, tol: float = 1e-2) -> bool:
+    """Checks if two numbers are close in value."""
+    return abs(x - y) < tol
+
+def sigmoid(x: float) -> float:
+    """Calculates the sigmoid function."""
+    if x >= 0:
+        return 1.0 / (1.0 + math.exp(-x))
+    else:
+        exp_x = math.exp(x)
+        return exp_x / (1.0 + exp_x)
+
+def relu(x: float) -> float:
+    """Applies the ReLU activation function."""
+    return max(0.0, x)
+
+def log(x: float) -> float:
+    """Calculates the natural logarithm."""
+    return math.log(x)
+
+def exp(x: float) -> float:
+    """Calculates the exponential function."""
+    return math.exp(x)
+
+def inv(x: float) -> float:
+    """Calculates the reciprocal."""
+    return 1.0 / x
+
+def log_back(x: float, d: float) -> float:
+    """Computes the derivative of log times a second arg."""
+    return d / x
+
+def inv_back(x: float, d: float) -> float:
+    """Computes the derivative of reciprocal times a second arg."""
+    return -d / (x ** 2)
+
+def relu_back(x: float, d: float) -> float:
+    """Computes the derivative of ReLU times a second arg."""
+    return d if x > 0 else 0.0
 
 # ## Task 0.3
 
@@ -50,5 +93,42 @@ from typing import Callable, Iterable
 # - sum: sum lists
 # - prod: take the product of lists
 
+def negList(lst: List[float]) -> Iterable[float]:
+    """Negates all elements in a list using map."""
+    return map(neg, lst)
 
-# TODO: Implement for Task 0.3.
+def addLists(lst1: List[float], lst2: List[float]) -> Iterable[float]:
+    """Adds corresponding elements from two lists using zipWith."""
+    return zipWith(add, lst1, lst2)
+
+def sum(lst: List[float]) -> float:
+    """Sums all elements in a list using reduce."""
+    return reduce(add, lst, 0.0)
+
+def prod(lst: List[float]) -> float:
+    """Calculates the product of all elements in a list using reduce."""
+    return reduce(mul, lst, 1.0)
+
+T = TypeVar('T')
+U = TypeVar('U')
+
+def map(fn: Callable[[T], U], iterable: Iterable[T]) -> Iterable[U]:
+    """Applies a given function to each element of an iterable."""
+    return [fn(x) for x in iterable]
+
+def zipWith(fn: Callable[[T, T], U], iter1: Iterable[T], iter2: Iterable[T]) -> Iterable[U]:
+    """Combines elements from two iterables using a given function."""
+    return [fn(x, y) for x, y in zip(iter1, iter2)]
+
+def reduce(fn: Callable[[U, T], U], iterable: Iterable[T], initializer: U) -> U:
+    """Reduces an iterable to a single value using a given function."""
+    it = iter(iterable)
+    if initializer is None:
+        try:
+            initializer = next(it)
+        except StopIteration:
+            raise TypeError('reduce failed: empty sequence with no initial value')
+    accum_value = initializer
+    for x in it:
+        accum_value = fn(accum_value, x)
+    return accum_value
