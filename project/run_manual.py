@@ -6,6 +6,7 @@ Be sure you have minitorch installed in you Virtual Env.
 import random
 
 import minitorch
+from typing import Any, Iterable
 
 
 class Network(minitorch.Module):
@@ -19,7 +20,7 @@ class Network(minitorch.Module):
 
 
 class Linear(minitorch.Module):
-    def __init__(self, in_size, out_size):
+    def __init__(self, in_size: int, out_size: int):
         super().__init__()
         random.seed(100)
         self.weights = []
@@ -34,7 +35,7 @@ class Linear(minitorch.Module):
             b = self.add_parameter(f"bias_{j}", 2 * (random.random() - 0.5))
             self.bias.append(b)
 
-    def forward(self, inputs):
+    def forward(self, inputs: Iterable[Any]):
         y = [b.value for b in self.bias]
         for i, x in enumerate(inputs):
             for j in range(len(y)):
@@ -43,7 +44,7 @@ class Linear(minitorch.Module):
 
 
 class ManualTrain:
-    def __init__(self, hidden_layers):
+    def __init__(self, hidden_layers: Any):
         self.model = Network()
 
     def run_one(self, x):

@@ -1,6 +1,7 @@
 import networkx as nx
 from dataclasses import dataclass
 import minitorch
+from typing import Union, Any
 
 if hasattr(minitorch, "Scalar"):
     Scalar = minitorch.Scalar  # type: ignore
@@ -11,7 +12,7 @@ else:
         name: str
 
 
-def build_expression(code):
+def build_expression(code: str):
     out = eval(
         code,
         {
@@ -24,7 +25,7 @@ def build_expression(code):
     return out
 
 
-def build_tensor_expression(code):
+def build_tensor_expression(code: str):
     variables = {
         "x": minitorch.tensor([[1.0, 2.0, 3.0]], requires_grad=True),
         "y": minitorch.tensor([[1.0, 2.0, 3.0]], requires_grad=True),
@@ -45,7 +46,7 @@ class GraphBuilder:
         self.hid = 0
         self.intermediates = {}
 
-    def get_name(self, x):
+    def get_name(self, x: Union[Scalar, minitorch.Tensor]):
         if not isinstance(x, Scalar) and not isinstance(x, minitorch.Tensor):
             return "constant %s" % (x,)
         elif len(x.name) > 15:
@@ -58,7 +59,7 @@ class GraphBuilder:
         else:
             return x.name
 
-    def run(self, final):
+    def run(self, final: Any):
         queue = [[final]]
 
         G = nx.MultiDiGraph()
