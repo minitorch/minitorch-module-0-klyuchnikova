@@ -132,6 +132,7 @@ def prod(lst: Iterable[float]) -> float:
 
 
 U = TypeVar("U")
+T = TypeVar("T")
 
 
 def map(fn: Callable[[T], U], iterable: Iterable[T]) -> Iterable[U]:

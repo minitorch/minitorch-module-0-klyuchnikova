@@ -1,14 +1,14 @@
 import torch
 
 import minitorch
-from typing import Iterable, Any, Callable
+from typing import List, Any, Callable
 
 def default_log_fn(epoch: int, total_loss: float, correct: float, losses: List[float]):
     print("Epoch ", epoch, " loss ", total_loss, "correct", correct)
 
 
 class Network(torch.nn.Module):
-    def __init__(self, hidden_layers:  int):
+    def __init__(self, hidden_layers: int):
         super().__init__()
 
         # Submodules
@@ -47,8 +47,8 @@ class TorchTrain:
         self,
         data: Any,
         learning_rate: float,
-        max_epochs: int =500,
-        log_fn: Callable =default_log_fn,
+        max_epochs: int = 500,
+        log_fn: Callable = default_log_fn,
     ):
         self.model = Network(self.hidden_layers)
         self.max_epochs = max_epochs
