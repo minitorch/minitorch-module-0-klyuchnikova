@@ -1,7 +1,6 @@
 from typing import Callable, List, Tuple
 
 import pytest
-import itertools
 from hypothesis import given
 from hypothesis.strategies import lists
 
@@ -115,7 +114,7 @@ def test_sigmoid(a: float) -> None:
     assert 0.0 <= sig <= 1.0
     assert pytest.approx(sigmoid(-a), rel=1e-6) == pytest.approx(1.0 - sig, rel=1e-6)
     assert sigmoid(0.0) == 0.5
-    assert min(0.999999999, sigmoid(a)) < sigmoid(a+0.1)
+    assert min(0.999999999, sigmoid(a)) < sigmoid(a + 0.1)
 
 
 @pytest.mark.task0_2

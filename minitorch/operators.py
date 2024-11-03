@@ -3,7 +3,7 @@
 import math
 
 # ## Task 0.1
-from typing import Callable, Iterable, List, TypeVar
+from typing import Callable, Iterable, TypeVar
 
 #
 # Implementation of a prelude of elementary functions.
@@ -131,7 +131,6 @@ def prod(lst: Iterable[float]) -> float:
     return reduce(mul, lst, 1.0)
 
 
-T = TypeVar("T")
 U = TypeVar("U")
 
 
@@ -147,7 +146,7 @@ def zipWith(
     return [fn(x, y) for x, y in zip(iter1, iter2)]
 
 
-def reduce(fn: Callable[[U, T], U], iterable: Iterable[T], initializer: U) -> U:
+def reduce(fn: Callable[[U, U], U], iterable: Iterable[U], initializer: U) -> U:
     """Reduces an iterable to a single value using a given function."""
     it = iter(iterable)
     if initializer is None:
