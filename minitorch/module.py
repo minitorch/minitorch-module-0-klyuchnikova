@@ -88,7 +88,7 @@ class Module:
             return self.__dict__["_modules"][key]
         return None
 
-    def __call__(self, *args: Any, **kwargs: Any) -> Any:
+    def __call__(self, *args: Any, **kwargs: Any) -> Any:  # noqa: D102
         return self.forward(*args, **kwargs)
 
     def __repr__(self) -> str:

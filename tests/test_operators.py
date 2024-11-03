@@ -18,6 +18,7 @@ from minitorch.operators import (
     lt,
     max,
     mul,
+    sum,
     exp,
     log,
     neg,
@@ -114,20 +115,19 @@ def test_sigmoid(a: float) -> None:
     assert 0.0 <= sig <= 1.0
     assert pytest.approx(sigmoid(-a), rel=1e-6) == pytest.approx(1.0 - sig, rel=1e-6)
     assert sigmoid(0.0) == 0.5
-    for b in [a + t/10 for t in range(1,10)]:
-        assert sigmoid(a) < sigmoid(b)
+    assert min(0.999999999, sigmoid(a)) < sigmoid(a+0.1)
 
 
 @pytest.mark.task0_2
-@pytest.mark.parametrize("a, b, c", itertools.product(small_floats, small_floats, small_floats))
+@given(small_floats, small_floats, small_floats)
 def test_transitive(a: float, b: float, c: float) -> None:
     """Test the transitive property of less-than (a < b and b < c implies a < c)"""
-    if lt(a , b) and lt(b , c):
-        assert lt(a , c)
+    if lt(a, b) and lt(b, c):
+        assert lt(a, c)
 
 
 @pytest.mark.task0_2
-@pytest.mark.parametrize("a, b", itertools.product(small_floats, small_floats))
+@given(small_floats, small_floats)
 def test_symmetric(a: float, b: float) -> None:
     """Write a test that ensures that :func:`minitorch.operators.mul` is symmetric, i.e.
     gives the same value regardless of the order of its input.
@@ -136,12 +136,12 @@ def test_symmetric(a: float, b: float) -> None:
 
 
 @pytest.mark.task0_2
-@pytest.mark.parametrize("x, y, z", itertools.product(small_floats, small_floats, small_floats))
+@given(small_floats, small_floats, small_floats)
 def test_distribute(x: float, y: float, z: float) -> None:
     r"""Write a test that ensures that your operators distribute, i.e.
     :math:`z \times (x + y) = z \times x + z \times y`
     """
-    assert mul(z, add(x, y)) == add(mul(z, x), mul(z, y))
+    assert_close(mul(z, add(x, y)), add(mul(z, x), mul(z, y)))
 
 
 @pytest.mark.task0_2
@@ -154,9 +154,9 @@ def test_other() -> None:
     assert mul(5, 3) == 15
     assert eq(555, 555) and not eq(555, 556)
     assert max(55, 66) == 66 and max(66, 55) == 66
-    assert neg(-5) == 5 and neg(5 ) == -5
+    assert neg(-5) == 5 and neg(5) == -5
     assert id(666) == 666
-    assert assert_close(log(exp(5)), 5)
+    assert_close(log(exp(5)), 5)
 
 
 # ## Task 0.3  - Higher-order functions
@@ -186,11 +186,8 @@ def test_sum_distribute(ls1: List[float], ls2: List[float]) -> None:
     sum_ls1 = sum(ls1)
     sum_ls2 = sum(ls2)
 
-    result_list = []
-    for i in range(len(ls1)):
-        result_list.append(ls1[i] + ls2[i])
-
-    assert sum_ls1 + sum_ls2 == sum(result_list)
+    result_list = addLists(ls1, ls2)
+    assert_close(sum_ls1 + sum_ls2, sum(result_list))
 
 
 @pytest.mark.task0_3

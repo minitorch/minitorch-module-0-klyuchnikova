@@ -1,14 +1,14 @@
 import torch
 
 import minitorch
+from typing import Iterable, Any, Callable
 
-
-def default_log_fn(epoch, total_loss, correct, losses):
+def default_log_fn(epoch: int, total_loss: float, correct: float, losses: List[float]):
     print("Epoch ", epoch, " loss ", total_loss, "correct", correct)
 
 
 class Network(torch.nn.Module):
-    def __init__(self, hidden_layers):
+    def __init__(self, hidden_layers:  int):
         super().__init__()
 
         # Submodules
@@ -23,7 +23,7 @@ class Network(torch.nn.Module):
 
 
 class Linear(torch.nn.Module):
-    def __init__(self, in_size, out_size):
+    def __init__(self, in_size: int, out_size: int):
         super().__init__()
         self.weight = torch.nn.Parameter(2 * (torch.rand((in_size, out_size)) - 0.5))
         self.bias = torch.nn.Parameter(2 * (torch.rand((out_size,)) - 0.5))
@@ -33,7 +33,7 @@ class Linear(torch.nn.Module):
 
 
 class TorchTrain:
-    def __init__(self, hidden_layers):
+    def __init__(self, hidden_layers: int):
         self.hidden_layers = hidden_layers
         self.model = Network(hidden_layers)
 
@@ -45,10 +45,10 @@ class TorchTrain:
 
     def train(
         self,
-        data,
-        learning_rate,
-        max_epochs=500,
-        log_fn=default_log_fn,
+        data: Any,
+        learning_rate: float,
+        max_epochs: int =500,
+        log_fn: Callable =default_log_fn,
     ):
         self.model = Network(self.hidden_layers)
         self.max_epochs = max_epochs
